@@ -1,0 +1,34 @@
+filebeat:
+  prospectors:
+    -
+      paths:
+        - /var/log/*.*
+        - /var/log/*/*.*
+      # https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html#_exclude_files
+      exclude_files: ["\\.json$"] 
+
+    -
+      paths:
+        - /var/log/*.json
+        - /var/log/*/*.json
+
+      # Tag as JSON to allow configuring filters in Logstash
+      document_type: json
+
+  registry_file: "/etc/filebeat/registry"
+
+output:
+
+  logstash:
+    # Will be replaced by docker-entrypoint.sh
+    hosts: ["LOGSTASH_HOST"]
+
+    # Set TLS=true for docker-entrypoint.sh to enable TLS
+    # https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html#configuration-output-tls
+    # tls:
+    #  insecure: true
+
+
+  ## Console output (can be used for testing configs)
+  # console:
+  #   pretty: true
